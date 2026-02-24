@@ -1,3 +1,4 @@
+from typing import Optional
 import models
 import oauth2
 from database import get_db
@@ -16,8 +17,8 @@ router = APIRouter(
 ) 
 
 @router.get("/", response_model=List[Post]) # get all the posts (app.get("/posts") in main.py)
-def read_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    posts = db.query(models.Post).all()
+def read_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
     # print(posts)
@@ -83,7 +84,7 @@ def delete_post(id: int, db: Session= Depends(get_db), current_user: int = Depen
     return Response(status_code= status.HTTP_204_NO_CONTENT)
 
 @router.put("/{id}", status_code= status.HTTP_202_ACCEPTED, response_model=Post) # update an employee by id (app.put("/posts/{id}") in main.py)
-def update_post(id: int, post: AddPost, db: Session= Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def update_post(id: int, addpost: AddPost, db: Session= Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     updated_post = db.query(models.Post).filter(models.Post.id == id)
     post = updated_post.first()
@@ -91,7 +92,7 @@ def update_post(id: int, post: AddPost, db: Session= Depends(get_db), current_us
     # updated_employee = cursor.fetchone()
     # conn.commit()
     # index = find_index_employee(id)
-    if post is None:
+    if updated_post is None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail = f"post with id {id} does not exits")
 
     if post.owner_id != current_user.id:
@@ -100,6 +101,6 @@ def update_post(id: int, post: AddPost, db: Session= Depends(get_db), current_us
     # employee_dict = employee.dict()
     # employee_dict['id'] = id
     # my_emps[index] = employee_dict
-    updated_post.update(post.dict(), synchronize_session= False)
+    updated_post.update(addpost.dict(), synchronize_session= False)
     db.commit()
     return updated_post.first()
