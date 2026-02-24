@@ -1,0 +1,32 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment Variables (SECRETS - DO NOT REMOVE)
+.env
+.env.local
+.env.production
+
+# IDE Settings
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Database dumps/files
+*.sql
+postgres_data/
+
+# OS Files
+.DS_Store
+Thumbs.db
