@@ -2,6 +2,9 @@ from database import engine
 import models
 from fastapi import FastAPI
 from routers import post, user, auth
+from config import settings
+
+
 
 models.Base.metadata.create_all(bind= engine) # create all the tables if not exists 
 

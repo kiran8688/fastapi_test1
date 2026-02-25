@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from config import settings
 
 
-DATABASE_URL = "postgresql://postgres:12345678@localhost/Fastapi_test1" # create the database url connection string
+DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}" # create the database url connection string
 
 engine = create_engine(DATABASE_URL, echo= True) # create the engine which is used to connect to the database
 

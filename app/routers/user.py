@@ -1,6 +1,6 @@
 from database import get_db
 import models
-from schemas import AddPost, Post, AddUser, UserOut
+from schemas import AddUser, UserOut
 from utils import hash_password # import the hash password function
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
