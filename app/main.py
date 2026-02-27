@@ -1,7 +1,7 @@
 from database import engine
 import models
 from fastapi import FastAPI
-from routers import post, user, auth
+from routers import post, user, auth, vote
 from config import settings
 
 
@@ -13,6 +13,7 @@ app = FastAPI() # create the fast api app
 app.include_router(post.router) # include the employee router
 app.include_router(user.router) # include the user router
 app.include_router(auth.router) # include the auth router
+app.include_router(vote.router) # include the vote router
 
 
 @app.get("/") # get the root url

@@ -1,7 +1,5 @@
+import models, schemas, utils
 from database import get_db
-import models
-from schemas import AddUser, UserOut
-from utils import hash_password # import the hash password function
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from fastapi import status, HTTPException
@@ -14,10 +12,10 @@ router = APIRouter(
 
 
 
-@router.post("/", status_code= status.HTTP_201_CREATED, response_model=UserOut) # create a new user (app.post("/users") in main.py)
-def create_user(user: AddUser, db: Session= Depends(get_db)):
+@router.post("/", status_code= status.HTTP_201_CREATED, response_model=schemas.UserOut) # create a new user (app.post("/users") in main.py)
+def create_user(user: schemas.AddUser, db: Session= Depends(get_db)):
 
-    hashed_pw = hash_password(user.password) # hash the password
+    hashed_pw = utils.hash_password(user.password) # hash the password
     user.password = hashed_pw # set the hashed password
 
     new_user = models.User(**user.dict()) # create the new user
@@ -27,7 +25,7 @@ def create_user(user: AddUser, db: Session= Depends(get_db)):
     return new_user
 
 
-@router.get("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model = UserOut) # get a user by id (app.get("/users/{id}") in main.py)
+@router.get("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model = schemas.UserOut) # get a user by id (app.get("/users/{id}") in main.py)
 def get_user(id: int, db: Session= Depends(get_db)):
 
     user = db.query(models.User).filter(models.User.id == id).first() # get the user by id

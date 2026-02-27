@@ -16,8 +16,15 @@ class Post(PostBase): # create the employee model for response only
     id: int
     created_at: datetime
     owner_id: int
-    owner: UserOut
+    owner: "UserOut"
     
+    class Config: # create the config model for response
+        orm_mode = True # enable the orm mode
+
+class PostOut(BaseModel): # create the post out model for response only
+    Post: Post # add the post model
+    votes: int # add the votes model
+
     class Config: # create the config model for response
         orm_mode = True # enable the orm mode
 
