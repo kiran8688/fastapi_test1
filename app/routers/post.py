@@ -1,6 +1,6 @@
 from typing import Optional
-import models, oauth2, schemas
-from database import get_db # import the get_db function from database
+from app import models, oauth2, schemas
+from app.database import get_db # import the get_db function from database
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from fastapi import Response, status, HTTPException, APIRouter
@@ -28,7 +28,7 @@ def read_posts(db: Session = Depends(get_db), current_user: schemas.UserOut = De
 
 @router.post("/", status_code= status.HTTP_201_CREATED, response_model=schemas.Post) # create a new employee (app.post("/posts") in main.py)
 def create_post(post: schemas.AddPost, db: Session= Depends(get_db), current_user: schemas.UserOut = Depends(oauth2.get_current_user)): # current_user is the user who is logged in
-    new_post = models.Post(owner_id = current_user.id, **post.dict())
+    new_post = models.Post(owner_id = current_user.id, **post.model_dump())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -103,6 +103,6 @@ def update_post(id: int, addpost: schemas.AddPost, db: Session= Depends(get_db),
     # employee_dict = employee.dict()
     # employee_dict['id'] = id
     # my_emps[index] = employee_dict
-    updated_post.update(addpost.dict(), synchronize_session= False)
+    updated_post.update(addpost.model_dump(), synchronize_session= False)
     db.commit()
     return updated_post.first()

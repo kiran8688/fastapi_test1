@@ -1,0 +1,40 @@
+version: '3.14'
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: fastapi1_postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Fastapi_test1
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: fastapi1_api
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app:ro
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    # env_file:
+    #   - ./.env
+    environment:
+      - DATABASE_HOSTNAME=fastapi1_postgres
+      - DATABASE_PORT=5432
+      - DATABASE_PASSWORD=12345678
+      - DATABASE_NAME=Fastapi_test1
+      - DATABASE_USERNAME=postgres
+      - SECRET_KEY=0238f073a0d9cafbc59484420844b842c9337f490dded87b6e26d13120afbef5
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+volumes:
+  postgres_data:

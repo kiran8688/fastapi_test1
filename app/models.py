@@ -3,7 +3,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import TIMESTAMP
 from sqlalchemy import text
 from sqlalchemy import Column, Integer, String, Boolean
-from database import Base
+from app.database import Base
 
 class Post(Base): # create the employee table
     __tablename__ = "posts" # table name

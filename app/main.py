@@ -1,8 +1,8 @@
-from database import engine
-import models
+from app.database import engine
+from app import models
 from fastapi import FastAPI
-from routers import post, user, auth, vote
-from config import settings
+from app.routers import post, user, auth, vote
+from app.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 
 

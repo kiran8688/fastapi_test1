@@ -1,16 +1,16 @@
-from database import get_db
+from app.database import get_db
+from app.schemas import TokenData
+from app import models
+from app.config import settings
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from fastapi import Depends
 from datetime import datetime, timedelta, timezone
 import jwt
 from jwt.exceptions import PyJWTError
-from schemas import TokenData
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import status
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-import models
-from config import settings
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm

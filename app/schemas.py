@@ -1,5 +1,5 @@
 from pydantic import conint
-from pydantic import BaseModel, EmailStr # import the base model and email str from pydantic
+from pydantic import BaseModel, EmailStr, ConfigDict # import the base model, email str and config dict from pydantic
 from datetime import datetime # import the datetime from datetime
 from typing import Optional # import the optional from typing
 
@@ -18,15 +18,13 @@ class Post(PostBase): # create the employee model for response only
     owner_id: int
     owner: "UserOut"
     
-    class Config: # create the config model for response
-        orm_mode = True # enable the orm mode
+    model_config = ConfigDict(from_attributes=True)
 
 class PostOut(BaseModel): # create the post out model for response only
     Post: Post # add the post model
     votes: int # add the votes model
 
-    class Config: # create the config model for response
-        orm_mode = True # enable the orm mode
+    model_config = ConfigDict(from_attributes=True)
 
 class AddUser(BaseModel): # create the user add model for request only
     email: EmailStr
@@ -37,8 +35,7 @@ class UserOut(BaseModel): # create the user model for response only
     email: EmailStr 
     created_at: datetime
 
-    class Config: # create the config model for response
-        orm_mode = True # enable the orm mode
+    model_config = ConfigDict(from_attributes=True)
 
 class UserLogin(BaseModel):
     email: EmailStr
