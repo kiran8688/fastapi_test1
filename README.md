@@ -91,23 +91,72 @@ When a user makes an API request, data travels through your files in a highly co
 6. **Execution**: The database session commits the new record to PostgreSQL.
 7. **Response Formatting (`schemas.py`)**: The fresh record is pushed through the `PostOut` schema, stripping sensitive data, and shipped back as JSON (201 Created).
 
-## 📊 5. Architecture Diagrams
 
-For deeper insights into the diagrams, check out the `docs/` folder!
-* **Sequence Diagram**: Visualizes the timeline of file interactions described in the "Code Flow Map". (`docs\mermaid-files-diagram.png`)
-*This diagram visually maps out the timeline and interactions described in the "Code Flow Map" above.*
+## 📊 5. Sequence Diagram
+*This diagram shows the timeline of file communication when a user creates a Post.*
 
-![Sequence Diagram](https://github.com/kiran8688/fastapi_test1/blob/main/docs/mermaid-files-diagram.png)
-* **Authentication Flow**: Mechanism mapping identity verification over `/login` endpoints. (`docs\JWT-Login_Authentication_Flow_Diagram.png`)
-*This diagram illustrates the step-by-step process of user authentication, from token verification to user extraction.*
+```mermaid
+sequenceDiagram
+    participant User
+    participant main.py
+    participant router (post.py)
+    participant oauth2.py
+    participant schemas.py
+    participant database.py & models.py
+    
+    User->>main.py: POST /posts/ {"title": "Hello", "content": "World"}
+    main.py->>router (post.py): Route to create_post()
+    
+    rect rgb(200, 220, 240)
+        Note right of router (post.py): 1. Security Check
+        router (post.py)->>oauth2.py: get_current_user(token)
+        oauth2.py-->>router (post.py): Returns User ID (e.g., User #5)
+    end
+    
+    rect rgb(220, 240, 200)
+        Note right of router (post.py): 2. Data Validation
+        router (post.py)->>schemas.py: Validate incoming data (AddPost)
+        schemas.py-->>router (post.py): Data is valid
+    end
+    
+    rect rgb(240, 220, 200)
+        Note right of router (post.py): 3. Database Interaction
+        router (post.py)->>database.py & models.py: Insert into models.Post(title, content, owner_id)
+        database.py & models.py-->>router (post.py): Success, Post created
+    end
+    
+    router (post.py)->>User: Return 201 Created (Post details)
+```
 
-![Authentication Flow](https://github.com/kiran8688/fastapi_test1/blob/main/docs/JWT-Login_Authentication_Flow_Diagram.png)
-* **CRUD Flow**: Breakdown of data retrieval strategies (e.g. Get Post by ID). (`docs\FastAPI-Get_Post_by_ID-Flow_Diagram.png`)
-*This diagram illustrates the step-by-step process of user authentication, from token verification to user extraction.*
+---
 
-![CRUD Flow](https://github.com/kiran8688/fastapi_test1/blob/main/docs/FastAPI-Get_Post_by_ID-Flow_Diagram.png)
+## 🗺️ 6. Flowchart for Key Functions
 
-## 💻 6. Installation, Run, & Debug Instructions
+### Authentication Flow (`/login`)
+```mermaid
+graph TD
+    A[User sends Email/Password] --> B{Does User Exist in DB?}
+    B -- No --> C[Return 403 Invalid Credentials]
+    B -- Yes --> D{Is Password Correct?}
+    D -- No --> C
+    D -- Yes --> E[Generate JWT Token in oauth2.py]
+    E --> F[Return Token to User]
+```
+
+### Standard CRUD Flow (e.g., Get Post by ID)
+```mermaid
+graph TD
+    A[User requests GET /posts/5] --> B[Router extracts ID 5]
+    B --> C[Query DB for Post where id=5]
+    C --> D{Did DB find Post?}
+    D -- No --> E[Raise 404 HTTP Exception]
+    D -- Yes --> F[Pass data through Schema for formatting]
+    F --> G[Return 200 OK with Data]
+```
+
+---
+
+## 💻 7. Installation, Run, & Debug Instructions
 
 ### Prerequisites
 
@@ -166,7 +215,7 @@ Database schemas change over time. When you add or modify a column in `app/model
 2. **Apply changes:** `alembic upgrade head`
 3. **Rollback mistake:** `alembic downgrade -1`
 
-## 🎯 7. Use Cases
+## 🎯 8. Use Cases
 
 - **Frontend App Integration**: Can be consumed by React, Vue, or Angular to create a full-stack social networking site.
 - **Mobile App**: Backend for an Android/iOS application.
