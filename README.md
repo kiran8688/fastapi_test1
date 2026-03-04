@@ -95,10 +95,16 @@ When a user makes an API request, data travels through your files in a highly co
 
 For deeper insights into the diagrams, check out the `docs/` folder!
 * **Sequence Diagram**: Visualizes the timeline of file interactions described in the "Code Flow Map". (`docs\mermaid-files-diagram.png`)
+*This diagram visually maps out the timeline and interactions described in the "Code Flow Map" above.*
+
 ![Sequence Diagram](docs\mermaid-files-diagram.png)
 * **Authentication Flow**: Mechanism mapping identity verification over `/login` endpoints. (`docs\JWT-Login_Authentication_Flow_Diagram.png`)
+*This diagram illustrates the step-by-step process of user authentication, from token verification to user extraction.*
+
 ![Authentication Flow](docs\JWT-Login_Authentication_Flow_Diagram.png)
 * **CRUD Flow**: Breakdown of data retrieval strategies (e.g. Get Post by ID). (`docs\FastAPI-Get_Post_by_ID-Flow_Diagram.png`)
+*This diagram illustrates the step-by-step process of user authentication, from token verification to user extraction.*
+
 ![CRUD Flow](docs\FastAPI-Get_Post_by_ID-Flow_Diagram.png)
 
 ## 💻 6. Installation, Run, & Debug Instructions
