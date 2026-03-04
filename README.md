@@ -1,4 +1,4 @@
-# 🚀 FastAPI Backend Master Guide & Complete Beginner's Guide
+# 🚀 FastAPI Backend Master Guide | Developed by [Kiran](https://github.com/kiran8688)
 
 Welcome to your project's central brain! This document is designed to be your ultimate reference point. It breaks down exactly how this application works beneath the surface, how all the individual files connect to form a cohesive system, the strategic sequence to follow when building something like this from scratch, and how to successfully run and debug it.
 
@@ -171,3 +171,8 @@ Database schemas change over time. When you add or modify a column in `app/model
 - **Frontend App Integration**: Can be consumed by React, Vue, or Angular to create a full-stack social networking site.
 - **Mobile App**: Backend for an Android/iOS application.
 - **Learning**: Acts as a perfect reference architecture for building clean, scalable APIs in Python.
+
+---
+### 🏆 Developed by [Kiran](https://github.com/kiran8688)
+*Trademark © 2024 Kiran8688*
+
