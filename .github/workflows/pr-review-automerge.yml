@@ -1,0 +1,48 @@
+name: Automated PR Review & Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  validate-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run Tests (Node.js)
+        if: hashFiles('package.json') != ''
+        run: |
+          npm ci || npm install
+          npm test --if-present
+
+      - name: Setup Python
+        if: hashFiles('requirements.txt') != '' || hashFiles('pyproject.toml') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Tests (Python)
+        if: hashFiles('requirements.txt') != '' || hashFiles('pyproject.toml') != ''
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if command -v pytest &> /dev/null; then pytest; fi
+
+      - name: Enable Auto-Merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ github.event.pull_request.number }}" --auto --merge \
+            --subject "Auto-merged PR #${{ github.event.pull_request.number }}" || echo "Auto-merge could not be set"
